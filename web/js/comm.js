@@ -50,3 +50,20 @@ var validate = {
         return true;
     }
 };
+
+function initSideMenu($,doc) {
+    //侧滑容器父节点
+    let offCanvasWrapper = $('#offCanvasWrapper');
+    //菜单界面，‘关闭侧滑菜单’按钮的点击事件
+    doc.getElementById('offCanvasHide').addEventListener('tap', function () {
+        offCanvasWrapper.offCanvas('close');
+    });
+    //主界面和侧滑菜单界面均支持区域滚动；
+    $('#offCanvasSideScroll').scroll();
+    $('#offCanvasContentScroll').scroll();
+
+    //主列表点击事件
+    offCanvasWrapper.on('tap', 'a', function () {
+        location.href = this.getAttribute('href');
+    })
+}

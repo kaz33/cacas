@@ -17,8 +17,10 @@ import static com.cacas.ms.tools.Constant.*;
 public class GoodsDao {
     private static DBUtil db = DBUtil.getInstance();
 
-    public static List<GoodsPO> queryAll() {
-        return queryByStockType("");
+    public static List<GoodsPO> queryAllByPage(int page) {
+        StringBuffer str = new StringBuffer();
+        str.append("OFFSET ").append(page*PAGE_SIZE).append(" FETCH NEXT ").append(PAGE_SIZE).append(" ROWS ONLY");
+        return queryByStockType(str.toString());
     }
 
     /**
@@ -39,17 +41,18 @@ public class GoodsDao {
             rs = ps.executeQuery();
             list = new ArrayList<GoodsPO>();
             while (rs.next()) {
-                if(condition.indexOf('0')>0) {
+                if(condition.indexOf("=0")>0) {
                     po = new GoodsPO(rs.getInt("gid"),
                             rs.getString("name"));
                 } else {
                     po = new GoodsPO(rs.getInt("gid"),
                             rs.getString("name"),
                             rs.getDouble("price"),
-                            //这里应该是spec字段，但是目前没有用，就借用单位字段
+                            //TODO 这里应该是spec字段，但是目前没有用，就借用单位字段
                             rs.getString("unitName"),
                             rs.getInt("unit"),
-                            rs.getInt("statis"),
+                            //TODO 这里应该是statis字段，但是目前没用，就借用分页查询总数
+                            rs.getInt("cnt"),
                             rs.getInt("stockqty"));
                 }
                 list.add(po);
